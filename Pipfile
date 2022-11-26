@@ -1,0 +1,29 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+jupyter = "*"
+numpy = "*"
+matplotlib = "*"
+scipy = "*"
+mne = "*"
+jupyter-contrib-nbextensions = "*"
+jupyter-nbextensions-configurator = "*"
+ipykernel = "*"
+tk = "*"
+websocket-client = "*"
+python-dispatch = "*"
+pandas = "*"
+sklearn = "*"
+scikit-learn = "*"
+seaborn = "*"
+pyriemann = "*"
+python-dotenv = "*"
+
+[dev-packages]
+pyqt5 = "*"
+
+[requires]
+python_version = "3.9"
