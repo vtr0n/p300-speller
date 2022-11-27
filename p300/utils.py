@@ -69,20 +69,24 @@ def rand(n):
     row = defaultdict(int)
 
     i = 0
+    k = 0
     while len(out) < n:
         i += 1
         num = random.randint(0, GRID_SIZE - 1)
-        if i % 2 == 0:
+        if k <= 3:
             if i - col[num] < 5:
                 continue
 
             out.append((True, num))
             col[num] = i
-        else:
+        elif k <= 6:
             if i - row[num] < 5:
                 continue
 
             out.append((False, num))
             row[num] = i
+        else:
+            k = -1
 
+        k += 1
     return out
