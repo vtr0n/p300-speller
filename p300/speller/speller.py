@@ -6,10 +6,10 @@ from random import randint
 import mne
 
 from p300.config import GRID_SIZE, EXPORT_RECORDED_DATA, EPOCHS_TMIN, EPOCHS_TMAX, TRAIN_EPOCH_NUM, PREDICT_EPOCH_NUM
-from p300.emotiv.emotiv import Emotiv
-from p300.model import get_model
-from p300.stimulus import Stimulus, StimulusHelper
-from p300.ui import UI
+from p300.emotiv.lsl_client import Emotiv
+from p300.speller.model import get_model
+from p300.speller.stimulus import Stimulus, StimulusHelper
+from p300.speller.ui import UI
 from p300.utils import data_to_raw, rand, load_prebuild_epochs
 
 
@@ -23,8 +23,7 @@ class Speller:
         if len(self.epochs):
             self.model = get_model(self.epochs)
 
-        self.emotiv = Emotiv(client_id, client_secret, license)
-        self.emotiv.open()
+        self.emotiv = Emotiv()
         self.ui = UI(callbacks=[self.train, self.predict, self.stop])
         self.state = self.STATE_ACTIVE
 
@@ -56,12 +55,12 @@ class Speller:
                 stimulus.append(Stimulus(StimulusHelper.TARGET) if is_target else Stimulus(StimulusHelper.NON_TARGET))
                 self.ui.highlight_row(num)
 
-        self.emotiv.stop()
+        data = self.emotiv.stop()
 
-        raw = data_to_raw(self.emotiv.get_data(), stimulus)
+        raw = data_to_raw(data, stimulus)
         if EXPORT_RECORDED_DATA:
             path = pathlib.Path(__file__).parent.resolve()
-            raw.save("{}/data/train_{}_raw.fif".format(path.parent, datetime.now()))
+            raw.save("{}/data/train_{}_raw.fif".format(path.parent.parent, datetime.now()))
 
         raw.filter(1, 30, method='iir')
         events = mne.find_events(raw)
@@ -91,12 +90,11 @@ class Speller:
                 stimulus.append(Stimulus(StimulusHelper.from_row(num)))
                 self.ui.highlight_row(num)
 
-        self.emotiv.stop()
-
-        raw = data_to_raw(self.emotiv.get_data(), stimulus)
+        data = self.emotiv.stop()
+        raw = data_to_raw(data, stimulus)
         if EXPORT_RECORDED_DATA:
             path = pathlib.Path(__file__).parent.resolve()
-            raw.save("{}/data/predict_{}_raw.fif".format(path.parent, datetime.now()))
+            raw.save("{}/data/predict_{}_raw.fif".format(path.parent.parent, datetime.now()))
 
         raw.filter(1, 30, method='iir')
         events = mne.find_events(raw)

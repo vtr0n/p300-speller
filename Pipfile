@@ -21,6 +21,10 @@ scikit-learn = "*"
 seaborn = "*"
 pyriemann = "*"
 python-dotenv = "*"
+musicalbeeps = "*"
+pycryptodome = "*"
+hidapi = "*"
+websockets = "*"
 
 [dev-packages]
 pyqt5 = "*"

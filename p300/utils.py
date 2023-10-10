@@ -9,16 +9,16 @@ from mne import Info, create_info, Epochs
 from mne.io.array import RawArray
 
 from p300.config import GRID_SIZE, EPOCHS_TMIN, EPOCHS_TMAX, LOAD_PREBUILD_EPOCHS
-from p300.stimulus import Stimulus, StimulusHelper
+from p300.speller.stimulus import Stimulus, StimulusHelper
 
 
 def data_to_raw(raw_data, stimulus: List[Stimulus]) -> RawArray:
-    data = [d['eeg'][2:16] + [0] for d in raw_data]
+    data = [d[:14] + [0] for d in raw_data]
     i = 0
     while len(stimulus):
         s = stimulus.pop(0)
 
-        while i < len(raw_data) and raw_data[i]['time'] < s.time:
+        while i < len(raw_data) and raw_data[i][14] < s.time:
             i += 1
 
         if i < len(raw_data):
@@ -30,7 +30,7 @@ def data_to_raw(raw_data, stimulus: List[Stimulus]) -> RawArray:
 
 def get_info() -> Info:
     ch_names = ['AF3', 'F7', 'F3', 'FC5', 'T7', 'P7', 'O1', 'O2', 'P8', 'T8', 'FC6', 'F4', 'F8', 'AF4']
-    sfreq = 256
+    sfreq = 128
 
     info = create_info(
         sfreq=sfreq,
