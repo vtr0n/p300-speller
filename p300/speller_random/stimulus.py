@@ -59,8 +59,6 @@ class StimulusHelper:
 
 @dataclass
 class Stimulus:
-    is_target: int
-    target: int
-    value: int
-    is_col: int
+    stim_id: int
+    targets: list
     time: float = field(default_factory=lambda: time.time())

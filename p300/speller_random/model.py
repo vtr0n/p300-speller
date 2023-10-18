@@ -1,6 +1,7 @@
 from typing import List
 
 import mne
+import math
 from mne import Epochs
 from mne.decoding import Vectorizer
 from pyriemann.estimation import Xdawn
@@ -19,11 +20,11 @@ def get_model(epoch_list: List[Epochs]) -> Pipeline:
     # model = make_pipeline(Vectorizer(), StandardScaler(), LogisticRegression(max_iter=1000))
     model.fit(X, y)
 
+
     cv = StratifiedShuffleSplit(n_splits=20, test_size=0.4, random_state=42)
     scores = cross_val_score(model, X, y, cv=cv, scoring='roc_auc')
     
     # mean
     print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-
 
     return model

@@ -10,7 +10,7 @@ class UI:
         self.labels = None
         self.window = None
         self.size_normal = 50
-        self.size_big = 60
+        self.size_big = 70
 
         self.configure_window(callbacks)
         self.configure_labels()
@@ -60,18 +60,14 @@ class UI:
         root.after(ms, lambda: var.set(1))
         root.wait_variable(var)
 
-    def highlight_row(self, row):
-        for i in range(len(self.labels)):
-            self.labels[row][i].configure(bg="#080808", fg="white", font=('Times', self.size_big))
+    def highlight(self, nums):
+        for num in nums:
+            col = num // GRID_SIZE
+            row = num % GRID_SIZE
 
-        self.labels[row][0].after(DURATION1, self.clear_row, row)
-        self.sleep(DURATION2)
+            self.labels[row][col].configure(bg="#080818", fg="white", font=('Times', self.size_big))
 
-    def highlight_col(self, col):
-        for i in range(len(self.labels)):
-            self.labels[i][col].configure(bg="#080808", fg="white", font=('Times', self.size_big))
-
-        self.labels[0][col].after(DURATION1, self.clear_col, col)
+        self.labels[row][col].after(DURATION1, self.clear_nums, nums)
         self.sleep(DURATION2)
 
     def highlight_target(self, row, col):
@@ -95,13 +91,12 @@ class UI:
             for j in range(len(self.labels)):
                 self.labels[i][j].configure(fg="grey", font=('Times', self.size_normal))
 
-    def clear_row(self, row):
-        for i in range(len(self.labels)):
-            self.labels[row][i].configure(bg="black", fg="grey", font=('Times', self.size_normal))
-
-    def clear_col(self, col):
-        for i in range(len(self.labels)):
-            self.labels[i][col].configure(bg="black", fg="grey", font=('Times', self.size_normal))
-
     def clear_cell(self, row, col):
         self.labels[row][col].configure(bg="black", fg="grey", font=('Times', self.size_normal))
+    
+    def clear_nums(self, nums):
+        for num in nums:
+            col = num // GRID_SIZE
+            row = num % GRID_SIZE
+
+            self.labels[row][col].configure(bg="black", fg="grey", font=('Times', self.size_normal))
